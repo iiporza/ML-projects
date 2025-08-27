@@ -1,0 +1,28 @@
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs & temp
+*.log
+*.tmp
+
+# PyTorch model weights
+*.pt
+*.pth
+
+# Data (MNIST etc.)
+data/
+
+# OS-specific
+.DS_Store
+Thumbs.db
