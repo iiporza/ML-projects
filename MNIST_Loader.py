@@ -8,13 +8,11 @@ import matplotlib.pyplot as plt
 
 # %% download training data 
 
-dataPath_mio = '/Users/iiporza/ecramai/data'
 #every dataset contains two arguments, transform and target transform to modify samples and labels
 
 # Download training data from open datasets.
 training_data = datasets.MNIST(
-    #root="data",
-    dataPath_mio,
+    root="data",
     train=True,
     download=True,
     transform=ToTensor(),
@@ -22,15 +20,14 @@ training_data = datasets.MNIST(
 
 # Download test data from open datasets.
 test_data = datasets.MNIST(
-    #root="data",
-    dataPath_mio,
+    root="data",
     train=False,
     download=True,
     transform=ToTensor(),
 )
 
 #pass dataset as an argument to dataloader. This wraps an iterable over our dataset.
-batch_size = 1
+batch_size = 8
 
 # Create data loaders.
 train_dataloader = DataLoader(training_data, batch_size=batch_size)

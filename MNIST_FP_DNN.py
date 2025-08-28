@@ -1,9 +1,9 @@
 # %% import the dataset
-from myFunctions.MNIST_Loader import train_dataloader, test_dataloader
+from MNIST_Loader import train_dataloader, test_dataloader
 #import the model made in pyTorch
-from myFunctions.KMNIST_DNN import model
+from DNN_architecture import model
 #import the functions used to train and test the model
-from myFunctions.TrainTest import train, test
+from TrainTest import train, test
 
 # %% TRAIN THE MODEL
 from tqdm import tqdm  # Import tqdm for progress bar
@@ -14,7 +14,6 @@ from torch.optim.lr_scheduler import LambdaLR
 loss_fn = nn.NLLLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
 accuracy_values = [] #array to store accuracy values
-
 
 # Define the learning rate schedule
 def lr_schedule(epochs):
@@ -59,8 +58,8 @@ if saveAccuracyFlag == True:
     #save the accuracy vector in a CSV file
     import csv
 
-    savePathAccuracy = '/Users/iiporza/ecramai/models_accuracy'
-    savePathAccuracy = savePathAccuracy + '/DNN_MNIST_FP_ref_opt.csv'
+    savePathAccuracy = 'models_accuracy'
+    savePathAccuracy = savePathAccuracy + '/DNN_MNIST_FP.csv'
     # Writing to CSV
     with open(savePathAccuracy, mode='w', newline='') as file:
         writer = csv.writer(file)
@@ -69,6 +68,7 @@ if saveAccuracyFlag == True:
             writer.writerow([epoch, accuracy])  # Write each accuracy value with the epoch number
 
     print(f"Accuracy values saved to {savePathAccuracy}")
+
 # %%
 
 savePath = '/Users/iiporza/desktop/ai ecram work'

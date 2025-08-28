@@ -1,9 +1,9 @@
 # %% import the dataset
-from myFunctions.MNIST_Loader import train_dataloader, test_dataloader
+from MNIST_Loader import train_dataloader, test_dataloader
 #import the model made in pyTorch
-from myFunctions.MNIST_CNN import model
+from LeNet5_architecture import model
 #import the functions used to train and test the model
-from myFunctions.TrainTest import train, test
+from TrainTest import train, test
 
 # %% TRAIN THE MODEL
 from tqdm import tqdm  # Import tqdm for progress bar
