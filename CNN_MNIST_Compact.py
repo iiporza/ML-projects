@@ -1,9 +1,9 @@
 # %% import the dataset
-from MNIST_Loader import train_dataloader, test_dataloader
+from utils.MNIST_Loader import train_dataloader, test_dataloader
 #import the model made in pyTorch
-from LeNet5_architecture import model
+from utils.LeNet5_architecture import model
 #import the functions used to train and test the model
-from TrainTest import train, test
+from utils.TrainTest import train, test
 
 # %% TRAIN THE MODEL
 from tqdm import tqdm  # Import tqdm for progress bar
@@ -26,8 +26,8 @@ print("Done!")
 import matplotlib.pyplot as plt
 
 #Plot the accuracy as a function of the epoch
-savePath = '/Users/iiporza/desktop/ai ecram work'
-saveAccuracy = savePath + '/accuracy3.svg'
+savePath = 'modelsAccuracy'
+saveAccuracy = savePath + '/accuracy.svg'
 
 plt.plot(range(epochs), accuracy_values, label="Accuracy", color="blue")
 plt.xlabel("Epoch")
@@ -46,7 +46,7 @@ if saveAccuracyFlag == True:
     #save the accuracy vector in a CSV file
     import csv
 
-    savePathAccuracy = '/Users/iiporza/ecramai/models_accuracy'
+    savePathAccuracy = 'modelsAccuracy'
     savePathAccuracy = savePathAccuracy + '/MNIST_FP_CNN_ref.csv'
     # Writing to CSV
     with open(savePathAccuracy, mode='w', newline='') as file:
@@ -58,23 +58,23 @@ if saveAccuracyFlag == True:
     print(f"Accuracy values saved to {savePathAccuracy}")
 # %%
 
-savePath = '/Users/iiporza/desktop/ai ecram work'
+savePath = 'modelsAccuracy'
 saveConfusionMatrix = savePath + '/confusionMatrixCNNFP.svg'
 
 import importlib
-import confusionMatrixPlot
+import utils.confusionMatrixPlot as confusionMatrixPlot
 importlib.reload(confusionMatrixPlot)
-from confusionMatrixPlot import confusionMatrixPlot1
+from utils.confusionMatrixPlot import confusionMatrixPlot1
 
 confusionMatrixPlot1(model, test_dataloader, saveConfusionMatrix, 1)
 # %%
-savePath = '/Users/iiporza/desktop/ai ecram work'
+savePath = 'modelsAccuracy'
 saveConfusionMatrix = savePath + '/confusionMatrixCNNFPcompact.svg'
 
 import importlib
-import confusionMatrixPlotCompact
+import utils.confusionMatrixPlotCompact as confusionMatrixPlotCompact
 importlib.reload(confusionMatrixPlotCompact)
-from confusionMatrixPlotCompact import confusionMatrixPlot2
+from utils.confusionMatrixPlotCompact import confusionMatrixPlot2
 
 confusionMatrixPlot2(model, test_dataloader, saveConfusionMatrix, 1)
 # %%

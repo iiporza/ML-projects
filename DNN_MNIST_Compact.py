@@ -1,9 +1,9 @@
 # %% import the dataset
-from MNIST_Loader import train_dataloader, test_dataloader
+from utils.MNIST_Loader import train_dataloader, test_dataloader
 #import the model made in pyTorch
-from DNN_architecture import model
+from utils.DNN_architecture import model
 #import the functions used to train and test the model
-from TrainTest import train, test
+from utils.TrainTest import train, test
 
 # %% TRAIN THE MODEL
 from tqdm import tqdm  # Import tqdm for progress bar
@@ -37,10 +37,6 @@ print("Done!")
 # %% plot the accuracy
 import matplotlib.pyplot as plt
 
-#Plot the accuracy as a function of the epoch
-savePath = '/Users/iiporza/desktop/ai ecram work'
-saveAccuracy = savePath + '/accuracy3.svg'
-
 plt.plot(range(epochs), accuracy_values, label="Accuracy", color="blue")
 plt.xlabel("Epoch")
 plt.ylabel("Accuracy")
@@ -48,17 +44,15 @@ plt.title("Accuracy over Epochs")
 plt.legend()
 plt.grid(True)
 
-#plt.savefig(saveAccuracy, format='svg')
-
 plt.show()
 
-saveAccuracyFlag = 1
+saveAccuracyFlag = 0
 
 if saveAccuracyFlag == True:
     #save the accuracy vector in a CSV file
     import csv
 
-    savePathAccuracy = 'models_accuracy'
+    savePathAccuracy = 'modelsAccuracy'
     savePathAccuracy = savePathAccuracy + '/DNN_MNIST_FP.csv'
     # Writing to CSV
     with open(savePathAccuracy, mode='w', newline='') as file:
@@ -71,13 +65,13 @@ if saveAccuracyFlag == True:
 
 # %%
 
-savePath = '/Users/iiporza/desktop/ai ecram work'
+savePath = 'modelsAccuracy'
 saveConfusionMatrix = savePath + '/confusionMatrix8.svg'
 
 import importlib
-import confusionMatrixPlot
+import utils.confusionMatrixPlot as confusionMatrixPlot
 importlib.reload(confusionMatrixPlot)
-from confusionMatrixPlot import confusionMatrixPlot1
+from utils.confusionMatrixPlot import confusionMatrixPlot1
 
 confusionMatrixPlot1(model, test_dataloader, saveConfusionMatrix, 0)
 # %%

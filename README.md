@@ -1,2 +1,2 @@
 # ML-projects
-Machine learning projects with PyTorch. Learning the fundamentals of ML.
+Machine learning projects with PyTorch. Learning the fundamentals of ML, for purely educational purpose.

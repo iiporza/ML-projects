@@ -6,7 +6,7 @@ import torch.optim as optim
 import numpy as np
 #to train a model, a loss function and an optimizer are needed. 
 
-loss_fn = nn.NLLLoss() #the other example uses nn.NLLLoss
+#loss_fn = nn.NLLLoss() #the other example uses nn.NLLLoss
 #optimizer = torch.optim.SGD(model.parameters(), lr=0.05) #the optimizer is different for HardwareKit
 
 #then we define a training loop to make predictions on the input data, and then adjust
@@ -49,5 +49,3 @@ def test(dataloader, model, loss_fn, accuracy_values):
     correct /= size
     accuracy_values.append(100*correct)
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
-
-# %%

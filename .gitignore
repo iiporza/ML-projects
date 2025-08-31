@@ -22,7 +22,9 @@ __pycache__/
 
 # Data (MNIST etc.)
 data/
+modelsAccuracy/
 
 # OS-specific
 .DS_Store
 Thumbs.db
+
