@@ -81,3 +81,159 @@ for i in range(1, cols * rows + 1):
     plt.axis("off")
     plt.imshow(img.squeeze(), cmap="gray")
 plt.show()
+
+# %% create the model
+
+# Get cpu, gpu or mps device for training.
+device = (
+    "cuda"
+    if torch.cuda.is_available()
+    else "mps"
+    if torch.backends.mps.is_available()
+    else "cpu"
+)
+print(f"Using {device} device")
+
+
+# Define model
+#the neural network is defined by subclassing nn.Module,
+#  it is initialized in __init__. Every subclass implements the operations in the forward method
+
+class NeuralNetwork(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.convolution_stack = nn.Sequential( #input = 1x28x28
+            nn.Conv2d(1, 16, kernel_size=5), #output = 16x24x24
+            nn.Tanh(),
+            nn.MaxPool2d(kernel_size=2, stride=2), #output = 16x12x12
+            
+            nn.Conv2d(16, 32, kernel_size=5), #output = 32x8x8
+            nn.Tanh(),
+            nn.MaxPool2d(kernel_size=2, stride=2), #output = 32x4x4
+
+            nn.Flatten(),
+            nn.Linear(32 * 4 * 4, 128),
+            nn.Tanh(),
+            nn.Linear(128, 10),
+            nn.LogSoftmax(dim=1) 
+        )
+
+
+
+
+    def forward(self, x):
+        logits = self.convolution_stack(x)
+        return logits
+
+#it creates an instance of NeuralNetwork, and moves it to device
+model = NeuralNetwork()
+print(model) 
+
+
+#this approach uses nn.sequential within the definition of a class. The data is passed through all the modules in 
+#the same order as it is defined. 
+#to use the model, we pass it the input data, which executes the model's "forward".
+#do not call directly the model
+
+#by using the model's parameters() or named_parameters() methods, 
+
+
+# %% define train and test codes
+
+#then we define a training loop to make predictions on the input data, and then adjust
+
+def train(dataloader, model, loss_fn, optimizer):
+    size = len(dataloader.dataset)
+    model.train() # Set the model to train mode (important for layers like dropout and batch norm)
+    for batch, (X, y) in enumerate(dataloader):
+       # X, y = X.to(device), y.to(device)
+
+        #In this case, flatten operation is performed
+        # Compute prediction error
+        pred = model(X)
+        loss = loss_fn(pred, y) # Compute the loss by comparing the predictions with the true labels
+
+        # Backpropagation
+        loss.backward() # Backpropagation: Compute the gradients of the loss with respect to the model's parameters
+        optimizer.step()  # Update the model's weights based on the computed gradients
+        optimizer.zero_grad()  # Zero the gradients for the next step (otherwise gradients will accumulate)
+
+        # Print the loss every 100 batches
+        if batch % 100 == 0: 
+            loss, current = loss.item(), (batch + 1) * len(X)
+            print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+
+def test(dataloader, model, loss_fn, accuracy_values):
+    size = len(dataloader.dataset)
+    num_batches = len(dataloader) #number of batches in the dataloader
+    model.eval() # Set the model to evaluation mode (important for layers like dropout and batch norm)
+    test_loss, correct = 0, 0
+    # Evaluating the model with torch.no_grad() ensures that no gradients are computed during test mode
+    # also serves to reduce unnecessary gradient computations and memory usage for tensors with requires_grad=True
+    with torch.no_grad():
+        for X, y in dataloader:
+            #X, y = X.to(device), y.to(device)
+            pred = model(X)
+            test_loss += loss_fn(pred, y).item()
+            correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+    test_loss /= num_batches
+    correct /= size
+    accuracy_values.append(100*correct)
+    print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+
+# %% train the model 
+
+#loss_fn = nn.NLLLoss()
+loss_fn = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+accuracy_values = [] #array to store accuracy values
+
+epochs = 30
+for t in tqdm(range(epochs),  desc="Training Progress"):
+    print(f"Epoch {t+1}\n-------------------------------")
+    train(train_dataloader, model, loss_fn, optimizer)
+    test(test_dataloader, model, loss_fn, accuracy_values)
+print("Done!")
+
+# %% plot results 
+
+import matplotlib.pyplot as plt
+
+
+plt.plot(range(epochs), accuracy_values, label="Accuracy", color="blue")
+plt.xlabel("Epoch")
+plt.ylabel("Accuracy")
+plt.title("Accuracy over Epochs")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+saveAccuracyFlag = 0
+if saveAccuracyFlag == True:
+    import csv
+
+    savePathAccuracy = 'modelsAccuracy'
+    savePathAccuracy = savePathAccuracy + '/CNN_MNIST_FP.csv'
+    # Writing to CSV
+    with open(savePathAccuracy, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Epoch', 'Accuracy'])  # Write header (optional)
+        for epoch, accuracy in enumerate(accuracy_values, 1):
+            writer.writerow([epoch, accuracy])  # Write each accuracy value with the epoch number
+
+    print(f"Accuracy values saved to {savePathAccuracy}")
+
+# %%
+
+savePath = 'modelsAccuracy'
+saveConfusionMatrix = savePath + '/confusionMatrixCNN.svg'
+
+import importlib
+import utils.confusionMatrixPlot as confusionMatrixPlot
+importlib.reload(confusionMatrixPlot)
+from utils.confusionMatrixPlot import confusionMatrixPlot1
+
+confusionMatrixPlot1(model, test_dataloader, saveConfusionMatrix, 0)
+
+# %%
+

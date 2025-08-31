@@ -226,7 +226,7 @@ if saveAccuracyFlag == True:
 # %%
 
 savePath = 'modelsAccuracy'
-saveConfusionMatrix = savePath + '/confusionMatrix.svg'
+saveConfusionMatrix = savePath + '/confusionMatrixDNN.svg'
 
 import importlib
 import utils.confusionMatrixPlot as confusionMatrixPlot

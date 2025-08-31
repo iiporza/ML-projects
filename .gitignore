@@ -23,6 +23,7 @@ __pycache__/
 # Data (MNIST etc.)
 data/
 modelsAccuracy/
+#exerciseProjects/
 
 # OS-specific
 .DS_Store
